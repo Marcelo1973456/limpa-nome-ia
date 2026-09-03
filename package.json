@@ -1,0 +1,7 @@
+{
+  "name": "limpa-nome-ia",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Limpa Nome I.A: orientacao de negociacao de dividas com agente de IA, sem CPF e sem promessa de resultado."
+}

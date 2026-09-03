@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Limpa Nome I.A | Entenda sua dívida antes de negociar</title>
+<meta name="description" content="Consultor de I.A que te mostra o que dá pra negociar, quanto pedir de desconto e por onde ir. Gratuito e sem pedir CPF.">
+<meta name="theme-color" content="#0f1117">
+<meta property="og:title" content="Limpa Nome I.A">
+<meta property="og:description" content="Entenda sua dívida antes de negociar. Sem CPF, sem promessa, sem cobrança.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== DESIGN TOKENS ===== */
+:root, [data-theme="light"] {
+  --color-bg: #f7f6f2;
+  --color-surface: #f9f8f5;
+  --color-surface-2: #fbfbf9;
+  --color-surface-offset: #f3f0ec;
+  --color-divider: #dcd9d5;
+  --color-border: #d4d1ca;
+  --color-text: #28251d;
+  --color-text-muted: #7a7974;
+  --color-text-faint: #bab9b4;
+  --color-primary: #01696f;
+  --color-primary-hover: #0c4e54;
+  --color-success: #437a22;
+  --color-success-highlight: #d4dfcc;
+  --color-surface-dynamic: #e6e4df;
+  --shadow-sm: 0 1px 2px oklch(0.2 0.01 80 / 0.06);
+  --shadow-md: 0 4px 12px oklch(0.2 0.01 80 / 0.08);
+  --shadow-lg: 0 12px 32px oklch(0.2 0.01 80 / 0.12);
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  --space-1: 0.25rem; --space-2: 0.5rem; --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem; --space-8: 2rem; --space-10: 2.5rem;
+  --space-12: 3rem; --space-16: 4rem;
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --font-body: 'Inter', sans-serif;
+  --font-display: 'Plus Jakarta Sans', sans-serif;
+  --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-theme="dark"] {
+  --color-bg: #0f1117;
+  --color-surface: #1a1d25;
+  --color-surface-2: #1e2230;
+  --color-surface-offset: #232735;
+  --color-divider: #2a2e3d;
+  --color-border: #343847;
+  --color-text: #e8eaf0;
+  --color-text-muted: #8a8fa0;
+  --color-text-faint: #5a5f72;
+  --color-primary: #4f98a3;
+  --color-primary-hover: #227f8b;
+  --color-success: #6daa45;
+  --color-success-highlight: #1e3520;
+  --color-surface-dynamic: #2a2e3d;
+  --shadow-sm: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px oklch(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 32px oklch(0 0 0 / 0.5);
+}
+
+/* ===== BASE ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body {
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background: var(--color-bg);
+  line-height: 1.6;
+}
+img { display: block; max-width: 100%; }
+button { cursor: pointer; background: none; border: none; font: inherit; color: inherit; }
+input, textarea, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+
+/* ===== APP LAYOUT ===== */
+.app { display: flex; flex-direction: column; min-height: 100dvh; }
+
+/* ===== HEADER ===== */
+.header {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-divider);
+  padding: var(--space-3) var(--space-6);
+  display: flex; align-items: center; justify-content: space-between;
+  backdrop-filter: blur(8px);
+}
+.logo {
+  display: flex; align-items: center; gap: var(--space-2);
+  font-family: var(--font-display); font-weight: 700;
+  font-size: var(--text-base); color: var(--color-text); text-decoration: none;
+}
+.logo svg { color: var(--color-primary); }
+.logo span span { color: var(--color-primary); }
+.header-actions { display: flex; align-items: center; gap: var(--space-3); }
+.theme-btn {
+  width: 36px; height: 36px; border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--color-surface-offset); color: var(--color-text-muted);
+  transition: background var(--transition), color var(--transition);
+}
+.theme-btn:hover { background: var(--color-surface-dynamic); color: var(--color-text); }
+.btn-header {
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-primary); color: #fff;
+  border-radius: var(--radius-full); font-size: var(--text-sm);
+  font-weight: 600; transition: background var(--transition);
+}
+.btn-header:hover { background: var(--color-primary-hover); }
+
+/* ===== SCREENS ===== */
+.screen { display: none; flex: 1; }
+.screen.active { display: flex; flex-direction: column; }
+
+/* ===== LANDING ===== */
+.landing {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: var(--space-16) var(--space-6);
+  text-align: center;
+  background: radial-gradient(ellipse 80% 50% at 50% -10%, oklch(from var(--color-primary) l c h / 0.15), transparent);
+}
+.badge {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  background: var(--color-success-highlight);
+  color: var(--color-success);
+  border: 1px solid oklch(from var(--color-success) l c h / 0.25);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs); font-weight: 600;
+  margin-bottom: var(--space-6);
+}
+.landing h1 {
+  font-family: var(--font-display); font-size: var(--text-xl);
+  font-weight: 800; line-height: 1.1; max-width: 18ch;
+  margin-bottom: var(--space-4);
+}
+.landing h1 .accent { color: var(--color-primary); }
+.landing p {
+  font-size: var(--text-base); color: var(--color-text-muted);
+  max-width: 48ch; margin-bottom: var(--space-8); line-height: 1.7;
+}
+.btn-primary {
+  padding: var(--space-4) var(--space-8);
+  background: var(--color-primary); color: #fff;
+  border-radius: var(--radius-full); font-size: var(--text-base);
+  font-weight: 700; font-family: var(--font-display);
+  box-shadow: 0 4px 20px oklch(from var(--color-primary) l c h / 0.4);
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  display: inline-flex; align-items: center; gap: var(--space-2);
+}
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 6px 24px oklch(from var(--color-primary) l c h / 0.5);
+  transform: translateY(-1px);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.stats {
+  display: flex; gap: var(--space-8); margin-top: var(--space-12);
+  flex-wrap: wrap; justify-content: center;
+}
+.stat-item { text-align: center; }
+.stat-item .num {
+  font-family: var(--font-display); font-size: var(--text-xl);
+  font-weight: 800; color: var(--color-primary);
+}
+.stat-item .label { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+
+.features {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
+  gap: var(--space-4); margin-top: var(--space-12); text-align: left;
+  width: 100%; max-width: 960px;
+}
+.feature-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: var(--space-6);
+  box-shadow: var(--shadow-sm);
+}
+.feature-card .icon {
+  width: 40px; height: 40px; background: oklch(from var(--color-primary) l c h / 0.12);
+  border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;
+  margin-bottom: var(--space-4); color: var(--color-primary);
+}
+.feature-card h3 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-base); margin-bottom: var(--space-2); }
+.feature-card p { font-size: var(--text-sm); color: var(--color-text-muted); max-width: 100%; }
+
+/* ===== ONBOARDING ===== */
+.onboarding {
+  flex: 1; display: flex; flex-direction: column;
+  padding: var(--space-8) var(--space-6);
+  max-width: 640px; margin: 0 auto; width: 100%;
+}
+.step-indicator {
+  display: flex; gap: var(--space-2); margin-bottom: var(--space-8);
+}
+.step-dot {
+  height: 4px; border-radius: var(--radius-full); flex: 1;
+  background: var(--color-divider); transition: background var(--transition);
+}
+.step-dot.active { background: var(--color-primary); }
+.step-dot.done { background: var(--color-success); }
+
+.step { display: none; flex-direction: column; gap: var(--space-6); animation: fadeIn 0.3s ease; }
+.step.active { display: flex; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.step h2 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 700; }
+.step p { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+.form-group { display: flex; flex-direction: column; gap: var(--space-2); }
+.form-label { font-size: var(--text-sm); font-weight: 600; color: var(--color-text); }
+.form-input {
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); font-size: var(--text-base);
+  color: var(--color-text); transition: border-color var(--transition);
+  width: 100%;
+}
+.form-input:focus { border-color: var(--color-primary); outline: none; box-shadow: 0 0 0 3px oklch(from var(--color-primary) l c h / 0.15); }
+.form-input::placeholder { color: var(--color-text-faint); }
+
+.step-actions { display: flex; gap: var(--space-3); margin-top: var(--space-4); }
+.btn-next {
+  flex: 1; padding: var(--space-4);
+  background: var(--color-primary); color: #fff;
+  border-radius: var(--radius-lg); font-weight: 700;
+  font-size: var(--text-base); font-family: var(--font-display);
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-next:hover { background: var(--color-primary-hover); transform: translateY(-1px); }
+.btn-back {
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-surface-offset); color: var(--color-text-muted);
+  border-radius: var(--radius-lg); font-size: var(--text-base);
+  transition: background var(--transition);
+}
+.btn-back:hover { background: var(--color-surface-dynamic); }
+
+/* ===== CHAT (MATHEUS AI) ===== */
+.chat-screen {
+  flex: 1; display: flex; flex-direction: column;
+  max-width: 720px; margin: 0 auto; width: 100%; padding: var(--space-4);
+}
+.chat-header {
+  display: flex; align-items: center; gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+}
+.ai-avatar {
+  width: 44px; height: 44px; border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), oklch(from var(--color-primary) calc(l + 0.15) c calc(h + 30)));
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 800; font-family: var(--font-display); font-size: var(--text-base);
+  flex-shrink: 0;
+}
+.ai-info { flex: 1; }
+.ai-name { font-weight: 700; font-size: var(--text-base); font-family: var(--font-display); }
+.ai-status { font-size: var(--text-xs); color: var(--color-success); display: flex; align-items: center; gap: 4px; }
+.ai-status::before { content: ""; width: 6px; height: 6px; background: var(--color-success); border-radius: 50%; }
+.chat-stage-info { font-size: var(--text-xs); color: var(--color-text-muted); text-align: right; }
+
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: var(--space-4);
+  background: var(--color-surface-2);
+  border-left: 1px solid var(--color-border); border-right: 1px solid var(--color-border);
+  display: flex; flex-direction: column; gap: var(--space-4);
+  min-height: 400px; max-height: 60vh;
+}
+.chat-messages::-webkit-scrollbar { width: 4px; }
+.chat-messages::-webkit-scrollbar-track { background: transparent; }
+.chat-messages::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+
+.msg { display: flex; gap: var(--space-2); align-items: flex-end; max-width: 85%; }
+.msg.ai { align-self: flex-start; }
+.msg.user { align-self: flex-end; flex-direction: row-reverse; }
+
+.msg-avatar {
+  width: 28px; height: 28px; border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), oklch(from var(--color-primary) calc(l + 0.1) c calc(h + 20)));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 800; color: white; flex-shrink: 0;
+}
+.msg-bubble {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-xl); font-size: var(--text-sm); line-height: 1.6;
+  max-width: 100%;
+}
+.msg.ai .msg-bubble {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-bottom-left-radius: var(--radius-sm);
+  color: var(--color-text);
+}
+.msg.user .msg-bubble {
+  background: var(--color-primary);
+  color: white; border-bottom-right-radius: var(--radius-sm);
+}
+
+.chat-quick-btns {
+  display: flex; gap: var(--space-2); flex-wrap: wrap; padding: var(--space-2) 0;
+}
+.quick-btn {
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs); color: var(--color-text-muted);
+  transition: all var(--transition); cursor: pointer;
+  white-space: nowrap;
+}
+.quick-btn:hover {
+  background: oklch(from var(--color-primary) l c h / 0.1);
+  border-color: var(--color-primary); color: var(--color-primary);
+}
+
+.chat-input-area {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: none;
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: var(--space-3);
+}
+.chat-input-row { display: flex; gap: var(--space-2); align-items: flex-end; }
+.chat-input {
+  flex: 1; padding: var(--space-3) var(--space-4);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); font-size: var(--text-sm);
+  resize: none; line-height: 1.5; min-height: 44px; max-height: 120px;
+  color: var(--color-text);
+  transition: border-color var(--transition);
+}
+.chat-input:focus { border-color: var(--color-primary); outline: none; }
+.chat-input::placeholder { color: var(--color-text-faint); }
+.send-btn {
+  width: 44px; height: 44px; border-radius: var(--radius-full);
+  background: var(--color-primary); color: white;
+  display: flex; align-items: center; justify-content: center;
+  transition: background var(--transition), transform var(--transition);
+  flex-shrink: 0;
+}
+.send-btn:hover { background: var(--color-primary-hover); transform: scale(1.05); }
+
+/* ===== DASHBOARD ===== */
+.dashboard {
+  flex: 1; padding: var(--space-6);
+  max-width: 960px; margin: 0 auto; width: 100%;
+  display: flex; flex-direction: column; gap: var(--space-6);
+}
+.dash-welcome {
+  background: linear-gradient(135deg, var(--color-surface) 0%, oklch(from var(--color-primary) l c h / 0.08) 100%);
+  border: 1px solid var(--color-border); border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+.dash-welcome h2 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-1); }
+.dash-welcome p { color: var(--color-text-muted); font-size: var(--text-sm); }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: var(--space-4); }
+.kpi-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+.kpi-label { font-size: var(--text-xs); color: var(--color-text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2); }
+.kpi-value { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 800; color: var(--color-text); }
+.kpi-change { font-size: var(--text-xs); color: var(--color-success); margin-top: var(--space-1); display: flex; align-items: center; gap: 4px; }
+.kpi-change.down { color: #e05555; }
+
+.debts-section h3 { font-family: var(--font-display); font-size: var(--text-base); font-weight: 700; margin-bottom: var(--space-4); }
+.debt-item {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-3);
+  transition: box-shadow var(--transition);
+}
+.debt-item:hover { box-shadow: var(--shadow-md); }
+.debt-info { flex: 1; }
+.debt-name { font-weight: 600; font-size: var(--text-sm); }
+.debt-meta { font-size: var(--text-xs); color: var(--color-text-muted); margin-top: var(--space-1); }
+.debt-value { font-family: var(--font-display); font-weight: 700; font-size: var(--text-base); color: var(--color-text); text-align: right; }
+.debt-chance {
+  padding: var(--space-1) var(--space-3); border-radius: var(--radius-full);
+  font-size: var(--text-xs); font-weight: 700;
+}
+.debt-chance.high { background: var(--color-success-highlight); color: var(--color-success); }
+.debt-chance.medium { background: oklch(from #d19900 l c h / 0.15); color: #d19900; }
+.debt-chance.low { background: oklch(from #e05555 l c h / 0.15); color: #e05555; }
+.btn-negotiate {
+  padding: var(--space-2) var(--space-4);
+  background: oklch(from var(--color-primary) l c h / 0.12);
+  color: var(--color-primary); border-radius: var(--radius-full);
+  font-size: var(--text-xs); font-weight: 700;
+  transition: background var(--transition);
+  white-space: nowrap;
+}
+.btn-negotiate:hover { background: oklch(from var(--color-primary) l c h / 0.2); }
+
+.add-debt-btn {
+  display: flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: var(--space-4); background: var(--color-surface-offset);
+  border: 2px dashed var(--color-border); border-radius: var(--radius-lg);
+  color: var(--color-text-muted); font-size: var(--text-sm);
+  transition: all var(--transition); cursor: pointer; width: 100%;
+}
+.add-debt-btn:hover { background: oklch(from var(--color-primary) l c h / 0.06); border-color: var(--color-primary); color: var(--color-primary); }
+
+.action-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: var(--space-4); }
+.action-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: var(--space-5);
+  cursor: pointer; transition: all var(--transition);
+}
+.action-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+.action-card .ac-icon { font-size: 1.5rem; margin-bottom: var(--space-3); }
+.action-card h4 { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; margin-bottom: var(--space-1); }
+.action-card p { font-size: var(--text-xs); color: var(--color-text-muted); max-width: 100%; }
+
+/* ===== ADD DEBT MODAL ===== */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: oklch(0 0 0 / 0.6); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: var(--space-4);
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: var(--space-6);
+  width: 100%; max-width: 480px;
+  animation: fadeIn 0.2s ease;
+}
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6); }
+.modal-header h3 { font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg); }
+.modal-close { width: 32px; height: 32px; border-radius: var(--radius-full); background: var(--color-surface-offset); display: flex; align-items: center; justify-content: center; color: var(--color-text-muted); }
+.modal-close:hover { background: var(--color-surface-dynamic); }
+.modal-actions { display: flex; gap: var(--space-3); margin-top: var(--space-6); }
+
+/* ===== SUCCESS ===== */
+.success-screen {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: var(--space-8) var(--space-6); text-align: center; gap: var(--space-6);
+}
+.success-icon {
+  width: 80px; height: 80px; border-radius: var(--radius-full);
+  background: var(--color-success-highlight);
+  display: flex; align-items: center; justify-content: center;
+  animation: popIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes popIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.success-screen h2 { font-family: var(--font-display); font-size: var(--text-xl); font-weight: 800; }
+.success-screen p { color: var(--color-text-muted); max-width: 40ch; }
+.share-btns { display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: center; }
+.share-btn {
+  padding: var(--space-3) var(--space-5);
+  border: 1px solid var(--color-border); border-radius: var(--radius-full);
+  font-size: var(--text-sm); font-weight: 600;
+  transition: all var(--transition);
+}
+.share-btn:hover { background: var(--color-surface-offset); }
+
+/* ===== NAV BAR (mobile-bottom / desktop-tabs) ===== */
+.bottom-nav {
+  display: flex; background: var(--color-surface);
+  border-top: 1px solid var(--color-divider);
+  position: sticky; bottom: 0; z-index: 50;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  padding: var(--space-3) var(--space-2); gap: 4px;
+  font-size: var(--text-xs); color: var(--color-text-muted);
+  transition: color var(--transition); cursor: pointer;
+}
+.nav-item.active { color: var(--color-primary); }
+.nav-item svg { width: 20px; height: 20px; }
+
+/* ===== TYPING INDICATOR ===== */
+.typing { display: flex; gap: 4px; padding: var(--space-3) var(--space-4); align-items: center; }
+.typing span {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--color-text-muted); animation: blink 1.4s infinite;
+}
+.typing span:nth-child(2) { animation-delay: 0.2s; }
+.typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes blink { 0%,80%,100% { opacity: 0.2; transform: scale(0.8); } 40% { opacity: 1; transform: scale(1); } }
+
+/* ===== PROGRESS BAR ===== */
+.progress-bar { height: 4px; background: var(--color-divider); border-radius: var(--radius-full); overflow: hidden; margin-bottom: var(--space-6); }
+.progress-fill { height: 100%; background: var(--color-primary); border-radius: var(--radius-full); transition: width 0.5s ease; }
+
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .header { padding: var(--space-3) var(--space-4); }
+  .landing { padding: var(--space-10) var(--space-4); }
+  .stats { gap: var(--space-6); }
+  .dashboard { padding: var(--space-4); }
+  .debt-item { flex-wrap: wrap; }
+}
+
+/* ===== PRODUCAO v1: BLOCOS NOVOS ===== */
+.facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: var(--space-4); margin-top: var(--space-10); width: 100%; max-width: 960px; text-align: left;
+}
+.fact-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: var(--space-5);
+}
+.fact-card .fact-num {
+  font-family: var(--font-display); font-weight: 800; font-size: var(--text-lg);
+  color: var(--color-primary); margin-bottom: var(--space-1);
+}
+.fact-card .fact-txt { font-size: var(--text-sm); color: var(--color-text); }
+.fact-card .fact-src { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: var(--space-2); }
+
+.section-title {
+  font-family: var(--font-display); font-weight: 700; font-size: var(--text-lg);
+  margin-top: var(--space-12); margin-bottom: var(--space-2); text-align: center;
+}
+.section-sub { font-size: var(--text-sm); color: var(--color-text-muted); margin-bottom: var(--space-6) !important; }
+
+.how { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-4); width: 100%; max-width: 960px; text-align: left; }
+.how-step { display: flex; gap: var(--space-3); align-items: flex-start; }
+.how-num {
+  width: 28px; height: 28px; flex-shrink: 0; border-radius: var(--radius-full);
+  background: var(--color-primary); color: #fff; font-weight: 800; font-size: var(--text-xs);
+  display: flex; align-items: center; justify-content: center; font-family: var(--font-display);
+}
+.how-step h4 { font-family: var(--font-display); font-size: var(--text-sm); font-weight: 700; margin-bottom: 2px; }
+.how-step p { font-size: var(--text-sm); color: var(--color-text-muted); margin: 0 !important; max-width: 100%; }
+
+.nots {
+  width: 100%; max-width: 960px; margin-top: var(--space-12); text-align: left;
+  background: var(--color-surface-offset); border: 1px solid var(--color-border);
+  border-left: 4px solid var(--color-success);
+  border-radius: var(--radius-xl); padding: var(--space-6);
+}
+.nots h3 { font-family: var(--font-display); font-size: var(--text-base); font-weight: 700; margin-bottom: var(--space-4); }
+.nots ul { list-style: none; display: grid; gap: var(--space-3); }
+.nots li { font-size: var(--text-sm); display: flex; gap: var(--space-2); align-items: flex-start; color: var(--color-text); }
+.nots li b { font-weight: 700; }
+.nots .x { color: var(--color-success); font-weight: 800; flex-shrink: 0; }
+
+.consent {
+  display: flex; gap: var(--space-3); align-items: flex-start;
+  background: var(--color-surface-offset); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+}
+.consent input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; accent-color: var(--color-primary); }
+.consent label { font-size: var(--text-sm); color: var(--color-text-muted); line-height: 1.5; }
+.consent a { color: var(--color-primary); }
+
+.btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+.btn-next:disabled:hover { background: var(--color-primary); transform: none; }
+
+.field-error { font-size: var(--text-xs); color: #e05555; display: none; }
+.field-error.show { display: block; }
+.form-input.invalid { border-color: #e05555; }
+
+.resumo { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-4); display: grid; gap: var(--space-2); }
+.resumo-linha { display: flex; justify-content: space-between; gap: var(--space-4); font-size: var(--text-sm); }
+.resumo-linha span:first-child { color: var(--color-text-muted); }
+.resumo-linha span:last-child { font-weight: 600; text-align: right; }
+
+.chat-alert {
+  display: none; margin-bottom: var(--space-2); padding: var(--space-3) var(--space-4);
+  background: oklch(from #e05555 l c h / 0.12); border: 1px solid oklch(from #e05555 l c h / 0.3);
+  border-radius: var(--radius-lg); font-size: var(--text-xs); color: var(--color-text);
+}
+.chat-alert.show { display: block; }
+
+.empty-state {
+  border: 2px dashed var(--color-border); border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-5); text-align: center; margin-bottom: var(--space-3);
+}
+.empty-state h4 { font-family: var(--font-display); font-size: var(--text-base); margin-bottom: var(--space-2); }
+.empty-state p { font-size: var(--text-sm); color: var(--color-text-muted); max-width: 44ch; margin: 0 auto; }
+
+.debt-card {
+  background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg); padding: var(--space-4);
+  margin-bottom: var(--space-3); display: grid; gap: var(--space-3);
+}
+.debt-top { display: flex; align-items: center; gap: var(--space-3); flex-wrap: wrap; }
+.debt-top .debt-info { flex: 1; min-width: 140px; }
+.debt-tip { font-size: var(--text-xs); color: var(--color-text-muted); line-height: 1.6; border-top: 1px solid var(--color-divider); padding-top: var(--space-3); }
+.debt-tip b { color: var(--color-text); }
+.debt-acoes { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.btn-remove {
+  padding: var(--space-2) var(--space-3); border-radius: var(--radius-full);
+  font-size: var(--text-xs); color: var(--color-text-muted); background: var(--color-surface-offset);
+}
+.btn-remove:hover { color: #e05555; }
+.aviso-estimativa { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: var(--space-2); }
+
+.disclaimer {
+  border-top: 1px solid var(--color-divider); background: var(--color-surface);
+  padding: var(--space-6); text-align: center;
+}
+.disclaimer p { font-size: var(--text-xs); color: var(--color-text-muted); max-width: 70ch; margin: 0 auto; line-height: 1.7; }
+.disclaimer a { color: var(--color-primary); }
+
+.btn-wpp {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-5); border-radius: var(--radius-full);
+  background: #25d366; color: #06251a; font-weight: 700; font-size: var(--text-sm);
+  text-decoration: none;
+}
+.btn-wpp:hover { filter: brightness(1.05); }
+.chat-erro-acao { display: flex; gap: var(--space-2); margin-top: var(--space-3); }
+
+/* ===== TRILHA DO CONSUMIDOR ===== */
+.trilha { flex: 1; padding: var(--space-6); max-width: 760px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: var(--space-5); }
+.trilha-topo h2 { font-family: var(--font-display); font-size: var(--text-lg); font-weight: 700; margin-bottom: var(--space-2); }
+.trilha-topo p { font-size: var(--text-sm); color: var(--color-text-muted); }
+.passo { display: flex; gap: var(--space-4); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-xl); padding: var(--space-5); }
+.passo-num {
+  width: 34px; height: 34px; flex-shrink: 0; border-radius: var(--radius-full);
+  background: var(--color-primary); color: #fff; font-weight: 800; font-family: var(--font-display);
+  display: flex; align-items: center; justify-content: center;
+}
+.passo-corpo { flex: 1; display: flex; flex-direction: column; gap: var(--space-3); }
+.passo-corpo h3 { font-family: var(--font-display); font-size: var(--text-base); font-weight: 700; }
+.passo-corpo p { font-size: var(--text-sm); color: var(--color-text-muted); }
+.passo-lista { list-style: none; display: grid; gap: var(--space-2); }
+.passo-lista li { font-size: var(--text-sm); color: var(--color-text); padding-left: var(--space-4); position: relative; }
+.passo-lista li::before { content: "•"; position: absolute; left: 0; color: var(--color-primary); font-weight: 800; }
+.passo-link {
+  align-self: flex-start; display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-2) var(--space-4); border-radius: var(--radius-full);
+  background: oklch(from var(--color-primary) l c h / 0.12); color: var(--color-primary);
+  font-size: var(--text-xs); font-weight: 700; text-decoration: none; cursor: pointer;
+}
+.passo-link:hover { background: oklch(from var(--color-primary) l c h / 0.2); }
+.passo-alerta {
+  font-size: var(--text-xs); color: var(--color-text); line-height: 1.6;
+  background: var(--color-surface-offset); border-left: 3px solid #d19900;
+  border-radius: var(--radius-sm); padding: var(--space-3) var(--space-4);
+}
+.trilha-rodape { font-size: var(--text-xs); color: var(--color-text-faint); text-align: center; padding-bottom: var(--space-4); }
+@media (max-width: 600px) { .trilha { padding: var(--space-4); } .passo { padding: var(--space-4); gap: var(--space-3); } }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= HEADER ================= -->
+  <header class="header">
+    <a class="logo" href="#" onclick="showScreen('landing'); return false;">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-label="Limpa Nome IA">
+        <rect width="28" height="28" rx="8" fill="currentColor" opacity="0.12"/>
+        <path d="M8 20 C8 14 14 8 20 8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="20" cy="8" r="3" fill="currentColor"/>
+        <path d="M8 20 L11 17 L14 19 L18 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8" cy="20" r="2.5" fill="currentColor" opacity="0.6"/>
+      </svg>
+      <span>Limpa Nome<span> I.A</span></span>
+    </a>
+    <div class="header-actions">
+      <button class="theme-btn" data-theme-toggle aria-label="Alternar tema">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="btn-header" onclick="irParaOnboarding()">Começar agora</button>
+    </div>
+  </header>
+
+  <!-- ================= LANDING ================= -->
+  <div class="screen active" id="screen-landing">
+    <section class="landing">
+      <span class="badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Sem CPF, sem promessa, sem cobrança
+      </span>
+      <h1>Entenda sua dívida <span class="accent">antes de negociar</span></h1>
+      <p>Um consultor de I.A te mostra o que dá pra negociar, quanto pedir de desconto e por onde ir. De graça, e sem você informar seu CPF pra ninguém.</p>
+      <button class="btn-primary" onclick="irParaOnboarding()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Começar minha análise gratuita
+      </button>
+      <button class="quick-btn" style="margin-top:var(--space-4)" onclick="showScreen('trilha')">Ou veja a trilha completa, sem cadastro</button>
+
+      <div class="facts">
+        <div class="fact-card">
+          <div class="fact-num">5 anos</div>
+          <div class="fact-txt">É o prazo máximo que uma dívida pode ficar registrada no seu nome nos cadastros de negativados.</div>
+          <div class="fact-src">Código de Defesa do Consumidor, art. 43, parágrafo 1º</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">R$ 0,00</div>
+          <div class="fact-txt">É quanto custa negociar direto no Serasa Limpa Nome, no SPC e no Boa Vista. Consultar e negociar é gratuito pra você.</div>
+          <div class="fact-src">Canais oficiais dos birôs de crédito</div>
+        </div>
+        <div class="fact-card">
+          <div class="fact-num">Você no controle</div>
+          <div class="fact-txt">Nada é enviado ao seu credor sem você. O que você anota aqui fica salvo no seu próprio aparelho.</div>
+          <div class="fact-src">Sem banco de dados, sem CPF</div>
+        </div>
+      </div>
+
+      <h2 class="section-title">O que o Matheus faz por você</h2>
+      <p class="section-sub">Ele não negocia no seu lugar. Ele te prepara pra negociar melhor.</p>
+      <div class="features">
+        <div class="feature-card">
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-3-3-4 4"/></svg>
+          </div>
+          <h3>Organiza o seu cenário</h3>
+          <p>Você conta o que lembra, mesmo sem valor exato. Ele monta o quadro e mostra por onde começar.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          <h3>Define a ordem de ataque</h3>
+          <p>Dívida antiga costuma abrir mais desconto que dívida nova. A ordem certa muda o quanto você paga.</p>
+        </div>
+        <div class="feature-card">
+          <div class="icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Te dá o script da negociação</h3>
+          <p>O que falar na ligação, o que não aceitar de primeira e como confirmar se o acordo é legítimo.</p>
+        </div>
+      </div>
+
+      <h2 class="section-title">Como funciona</h2>
+      <p class="section-sub">Três passos, uns cinco minutos.</p>
+      <div class="how">
+        <div class="how-step">
+          <div class="how-num">1</div>
+          <div><h4>Você conta sua situação</h4><p>Nome, contato e algumas perguntas rápidas sobre as dívidas. Nenhum documento.</p></div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">2</div>
+          <div><h4>Conversa com o Matheus</h4><p>Ele analisa o que você contou e te devolve um plano em linguagem de gente.</p></div>
+        </div>
+        <div class="how-step">
+          <div class="how-num">3</div>
+          <div><h4>Você negocia e marca no painel</h4><p>Anota cada dívida, acompanha a ordem e volta pra tirar dúvida quando precisar.</p></div>
+        </div>
+      </div>
+
+      <div class="nots">
+        <h3>O que este app não faz</h3>
+        <ul>
+          <li><span class="x">✕</span><span><b>Não pede seu CPF.</b> Nem documento, nem senha, nem dado bancário.</span></li>
+          <li><span class="x">✕</span><span><b>Não promete limpar seu nome.</b> Quem dá baixa no registro é o credor, depois que você paga ou acorda.</span></li>
+          <li><span class="x">✕</span><span><b>Não cobra nada de você.</b> Se alguém pedir pagamento em nome deste app, é golpe.</span></li>
+          <li><span class="x">✕</span><span><b>Não fala com seu credor no seu lugar.</b> A negociação é sua, nos canais oficiais e gratuitos.</span></li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= ONBOARDING ================= -->
+  <div class="screen" id="screen-onboarding">
+    <div class="onboarding">
+      <div class="step-indicator">
+        <div class="step-dot active" id="dot-1"></div>
+        <div class="step-dot" id="dot-2"></div>
+        <div class="step-dot" id="dot-3"></div>
+      </div>
+
+      <div class="step active" id="step-1">
+        <div>
+          <h2>Vamos começar 👋</h2>
+          <p>Só o básico pra o Matheus saber com quem está falando. Nada de documento.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-name">Seu nome</label>
+          <input class="form-input" id="inp-name" type="text" autocomplete="name" placeholder="Ex: João Silva">
+          <div class="field-error" id="err-name">Escreva seu nome, pode ser só o primeiro.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-email">E-mail</label>
+          <input class="form-input" id="inp-email" type="email" autocomplete="email" placeholder="joao@email.com">
+          <div class="field-error" id="err-email">Confira o e-mail, parece estar incompleto.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-phone">WhatsApp com DDD</label>
+          <input class="form-input" id="inp-phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(79) 99999-9999">
+          <div class="field-error" id="err-phone">Precisa de DDD mais o número, 10 ou 11 dígitos.</div>
+        </div>
+        <div class="step-actions">
+          <button class="btn-next" onclick="validarPasso1()">Continuar</button>
+        </div>
+      </div>
+
+      <div class="step" id="step-2">
+        <div>
+          <h2>Qual é a sua situação hoje? 📊</h2>
+          <p>Responda pelo que você lembra. Valor exato a gente descobre depois.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-debts">Quantas dívidas você tem, mais ou menos?</label>
+          <select class="form-input" id="inp-debts">
+            <option value="">Selecione</option>
+            <option>1 dívida</option>
+            <option>2 a 5 dívidas</option>
+            <option>Mais de 5 dívidas</option>
+            <option>Não sei ao certo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-value">Valor total aproximado</label>
+          <select class="form-input" id="inp-value">
+            <option value="">Selecione</option>
+            <option>Até R$ 1.000</option>
+            <option>R$ 1.000 a R$ 5.000</option>
+            <option>R$ 5.000 a R$ 20.000</option>
+            <option>Acima de R$ 20.000</option>
+            <option>Não sei ao certo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-time">Há quanto tempo seu nome está negativado?</label>
+          <select class="form-input" id="inp-time">
+            <option value="">Selecione</option>
+            <option>Menos de 1 ano</option>
+            <option>1 a 3 anos</option>
+            <option>3 a 5 anos</option>
+            <option>Mais de 5 anos</option>
+            <option>Não sei ao certo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="inp-credor">Tipo do credor principal</label>
+          <select class="form-input" id="inp-credor">
+            <option value="">Selecione</option>
+            <option>Banco ou financeira</option>
+            <option>Cartão de crédito</option>
+            <option>Loja ou varejo</option>
+            <option>Telefonia ou internet</option>
+            <option>Água, luz ou gás</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field-error" id="err-step2">Responda as quatro perguntas pra seguir.</div>
+        <div class="step-actions">
+          <button class="btn-back" onclick="irPasso(1)">Voltar</button>
+          <button class="btn-next" onclick="validarPasso2()">Ver meu resumo</button>
+        </div>
+      </div>
+
+      <div class="step" id="step-3">
+        <div>
+          <h2>Confere se está certo 📝</h2>
+          <p>É isso que o Matheus vai receber. Nenhum documento seu aparece aqui.</p>
+        </div>
+        <div class="resumo" id="resumo-box"></div>
+        <div class="consent">
+          <input type="checkbox" id="inp-consent" onchange="atualizarConsent()">
+          <label for="inp-consent">Autorizo o Limpa Nome I.A a usar as informações acima para me orientar e a me chamar no WhatsApp. Li a <a href="privacidade.html" target="_blank" rel="noopener">política de privacidade</a>.</label>
+        </div>
+        <div class="step-actions">
+          <button class="btn-back" onclick="irPasso(2)">Voltar</button>
+          <button class="btn-next" id="btn-finalizar" disabled onclick="finalizarOnboarding()">Falar com o Matheus</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CHAT ================= -->
+  <div class="screen" id="screen-chat">
+    <div class="chat-screen">
+      <div class="chat-header">
+        <div class="ai-avatar">M</div>
+        <div class="ai-info">
+          <div class="ai-name">Matheus I.A</div>
+          <div class="ai-status">Consultor de negociação</div>
+        </div>
+        <div class="chat-stage-info" id="chat-stage">Conversa gratuita</div>
+      </div>
+      <div class="chat-messages" id="chat-msgs"></div>
+      <div class="chat-input-area">
+        <div class="chat-alert" id="chat-alert"></div>
+        <div class="chat-quick-btns" id="quick-btns"></div>
+        <div class="chat-input-row">
+          <textarea class="chat-input" id="chat-input" rows="1" placeholder="Escreva sua dúvida..." onkeydown="handleChatKey(event)"></textarea>
+          <button class="send-btn" onclick="enviarDoInput()" aria-label="Enviar" id="send-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PAINEL ================= -->
+  <div class="screen" id="screen-dashboard">
+    <div class="dashboard">
+      <div class="dash-welcome">
+        <h2 id="dash-name">Seu painel</h2>
+        <p>Tudo que você anotar aqui fica salvo só neste aparelho, no seu navegador.</p>
+      </div>
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-label">Dívidas anotadas</div>
+          <div class="kpi-value" id="kpi-total">0</div>
+          <div class="kpi-change" id="kpi-total-sub">Comece pela que você lembra</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Valor total anotado</div>
+          <div class="kpi-value" id="kpi-valor">R$ 0</div>
+          <div class="kpi-change" id="kpi-valor-sub">Soma do que você informou</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Prioridade agora</div>
+          <div class="kpi-value" id="kpi-prio">0</div>
+          <div class="kpi-change">Dívidas na faixa mais favorável</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Mais antiga</div>
+          <div class="kpi-value" id="kpi-antiga">Nenhuma</div>
+          <div class="kpi-change" id="kpi-antiga-sub">Tempo desde o vencimento</div>
+        </div>
+      </div>
+
+      <div class="debts-section">
+        <h3>🗺️ Seu mapa de dívidas</h3>
+        <div id="debts-list"></div>
+        <button class="add-debt-btn" onclick="abrirModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Anotar uma dívida
+        </button>
+        <p class="aviso-estimativa">As faixas são estimativas baseadas no tempo desde o vencimento. Não são garantia de desconto.</p>
+      </div>
+
+      <div class="action-cards">
+        <div class="action-card" onclick="showScreen('chat')">
+          <div class="ac-icon">💬</div>
+          <h4>Falar com o Matheus</h4>
+          <p>Tire dúvida sobre qualquer uma dessas dívidas</p>
+        </div>
+        <div class="action-card" onclick="abrirWhatsApp()">
+          <div class="ac-icon">📲</div>
+          <h4>Continuar no WhatsApp</h4>
+          <p>Quando o caso for mais complicado, fale com gente de verdade</p>
+        </div>
+        <div class="action-card" onclick="showScreen('success')">
+          <div class="ac-icon">🏆</div>
+          <h4>Registrar conquista</h4>
+          <p>Fechou um acordo? Marque aqui e comemore</p>
+        </div>
+        <div class="action-card" onclick="apagarMeusDados()">
+          <div class="ac-icon">🧹</div>
+          <h4>Apagar meus dados</h4>
+          <p>Limpa tudo que está salvo neste aparelho, na hora</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CONQUISTA ================= -->
+  <div class="screen" id="screen-success">
+    <div class="success-screen">
+      <div class="success-icon">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2>Negociação fechada 🎉</h2>
+      <p>Guarde o comprovante e o número do acordo. A baixa no cadastro costuma sair em até 5 dias úteis depois do pagamento.</p>
+      <div class="share-btns">
+        <button class="share-btn" onclick="compartilharConquista()">📱 Compartilhar no WhatsApp</button>
+        <button class="share-btn" onclick="copiarConquista()">📋 Copiar texto</button>
+      </div>
+      <button class="btn-primary" onclick="showScreen('dashboard')">Voltar ao painel</button>
+    </div>
+  </div>
+
+  <!-- ================= TRILHA DO CONSUMIDOR ================= -->
+  <div class="screen" id="screen-trilha">
+    <div class="trilha">
+      <div class="trilha-topo">
+        <h2>A trilha oficial 🧭</h2>
+        <p>O caminho que advogado de consumidor ensina, em ordem. Tudo gratuito e feito por você, nos sites oficiais. A gente não pede seu CPF em momento nenhum: você usa o seu documento lá, direto na fonte.</p>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">1</div>
+        <div class="passo-corpo">
+          <h3>Veja tudo que está no seu nome</h3>
+          <p>Consulte seu CPF nos três cadastros. É gratuito e você faz direto no site ou app de cada um, com login próprio.</p>
+          <ul class="passo-lista">
+            <li><b>Serasa:</b> consulta gratuita e o Serasa Limpa Nome, com as ofertas de acordo.</li>
+            <li><b>SPC Brasil:</b> área do consumidor, consulta gratuita do seu CPF.</li>
+            <li><b>Boa Vista:</b> consulta gratuita pelo Consumidor Positivo.</li>
+          </ul>
+          <a class="passo-link" href="https://www.serasa.com.br" target="_blank" rel="noopener">Abrir a Serasa</a>
+          <div class="passo-alerta">Só entre pelos sites oficiais. Qualquer página que peça pagamento para consultar seu nome é golpe.</div>
+        </div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">2</div>
+        <div class="passo-corpo">
+          <h3>Puxe o Registrato no Banco Central</h3>
+          <p>Este é o passo que quase ninguém conhece e que muda o jogo. O Registrato mostra empréstimos, financiamentos, contas, chaves Pix e cheques sem fundo registrados no seu nome, inclusive coisa que não aparece em birô de crédito.</p>
+          <ul class="passo-lista">
+            <li>É <b>gratuito</b>, feito pelo Banco Central.</li>
+            <li>Precisa de conta <b>gov.br nível prata ou ouro</b>, com verificação em duas etapas ligada.</li>
+            <li>Peça o relatório de <b>Empréstimos e Financiamentos</b>. É ele que lista o que você deve e para quem.</li>
+          </ul>
+          <a class="passo-link" href="https://www.bcb.gov.br/meubc" target="_blank" rel="noopener">Abrir o Meu BC</a>
+        </div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">3</div>
+        <div class="passo-corpo">
+          <h3>Anote cada dívida com a data de vencimento</h3>
+          <p>A data do vencimento é a informação mais valiosa do processo, porque é dela que sai o prazo dos 5 anos e o tamanho do desconto que você pode pedir.</p>
+          <p>Traga essas datas para o seu painel aqui. O app calcula a faixa e a ordem de ataque.</p>
+          <button class="passo-link" onclick="showScreen('dashboard')">Ir para o meu painel</button>
+        </div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">4</div>
+        <div class="passo-corpo">
+          <h3>Negocie na ordem certa</h3>
+          <ul class="passo-lista">
+            <li>Comece pelas <b>mais antigas</b>. Dívida velha costuma abrir margem maior, porque o credor já contabilizou a perda.</li>
+            <li>Pergunte assim: <i>"Tenho interesse em quitar essa dívida à vista. Qual a melhor condição que vocês conseguem hoje?"</i> Depois, silêncio. Deixe o credor falar primeiro.</li>
+            <li><b>Não aceite a primeira oferta.</b> Se der, espere um feirão de negociação.</li>
+            <li>Boleto só do credor ou do birô oficial. <b>Pagamento em conta de pessoa física é golpe.</b></li>
+            <li>Pagou, guarde o comprovante e o número do acordo. Cobre a baixa se ela não sair.</li>
+          </ul>
+          <button class="passo-link" onclick="showScreen('chat')">Treinar a ligação com o Matheus</button>
+        </div>
+      </div>
+
+      <div class="passo">
+        <div class="passo-num">5</div>
+        <div class="passo-corpo">
+          <h3>Se tiver coisa errada, cobre o seu direito</h3>
+          <p>Registro com mais de 5 anos do vencimento, dívida que não é sua ou valor que não bate: siga esta escada, um degrau de cada vez, guardando protocolo de tudo.</p>
+          <ul class="passo-lista">
+            <li><b>1º</b> Reclame no canal do birô e peça a exclusão do registro.</li>
+            <li><b>2º</b> Abra reclamação no consumidor.gov.br, que é oficial, gratuito e a empresa tem prazo para responder.</li>
+            <li><b>3º</b> Procon da sua cidade.</li>
+            <li><b>4º</b> Juizado ou advogado, se nada resolver.</li>
+          </ul>
+          <a class="passo-link" href="https://www.consumidor.gov.br" target="_blank" rel="noopener">Abrir o consumidor.gov.br</a>
+          <div class="passo-alerta">Antes de sonhar com indenização, saiba disto: pela Súmula 385 do STJ, quem já tem outra negativação legítima não recebe dano moral pela anotação irregular, só tem direito ao cancelamento do registro errado.</div>
+        </div>
+      </div>
+
+      <div class="trilha-rodape">
+        Isto é orientação, não é consultoria jurídica. Cada caso tem detalhe próprio, e a palavra final é de um advogado.
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= DISCLAIMER ================= -->
+  <div class="disclaimer">
+    <p>
+      Limpa Nome I.A é uma ferramenta de orientação. Não somos escritório de advocacia, não somos birô de crédito e não recebemos pagamento de dívida. A negociação é feita por você, nos canais oficiais e gratuitos do seu credor.
+      <a href="privacidade.html">Política de privacidade</a>
+    </p>
+  </div>
+
+  <!-- ================= NAV ================= -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="showScreen('landing')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Início
+    </button>
+    <button class="nav-item" id="nav-chat" onclick="showScreen('chat')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Matheus
+    </button>
+    <button class="nav-item" id="nav-dashboard" onclick="showScreen('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Painel
+    </button>
+    <button class="nav-item" id="nav-trilha" onclick="showScreen('trilha')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+      Trilha
+    </button>
+  </nav>
+</div>
+
+<!-- ================= MODAL ================= -->
+<div class="modal-overlay" id="modal-debt">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Anotar dívida</h3>
+      <button class="modal-close" onclick="fecharModal()" aria-label="Fechar">✕</button>
+    </div>
+    <div class="form-group" style="margin-bottom:var(--space-4)">
+      <label class="form-label" for="modal-company">Credor</label>
+      <input class="form-input" id="modal-company" placeholder="Ex: Banco Bradesco">
+    </div>
+    <div class="form-group" style="margin-bottom:var(--space-4)">
+      <label class="form-label" for="modal-amount">Valor aproximado (R$)</label>
+      <input class="form-input" id="modal-amount" type="number" inputmode="decimal" min="0" placeholder="Ex: 1500">
+    </div>
+    <div class="form-group" style="margin-bottom:var(--space-4)">
+      <label class="form-label" for="modal-venc">Mês e ano do vencimento</label>
+      <input class="form-input" id="modal-venc" type="month">
+    </div>
+    <div class="form-group" style="margin-bottom:var(--space-4)">
+      <label class="form-label" for="modal-bureau">Onde aparece negativada</label>
+      <select class="form-input" id="modal-bureau">
+        <option>Serasa</option>
+        <option>Boa Vista</option>
+        <option>SPC</option>
+        <option>Não sei</option>
+      </select>
+    </div>
+    <div class="field-error" id="err-modal">Preencha credor, valor e data de vencimento.</div>
+    <div class="modal-actions">
+      <button class="btn-back" onclick="fecharModal()" style="flex:1">Cancelar</button>
+      <button class="btn-next" onclick="salvarDivida()" style="flex:2">Salvar no meu mapa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   LIMPA NOME I.A  v1.0
+   App estático. Nenhuma chave de API vive aqui.
+   O que o usuário anota fica em localStorage, no aparelho dele.
+   ===================================================================== */
+
+const CONFIG = {
+  whatsapp: '5579991463157',
+  limiteMensagens: 25,
+  timeoutMs: 30000,
+  chaveStorage: 'lni_v1'
+};
+
+let state = {
+  perfil: { nome: '', email: '', whatsapp: '', qtdDividas: '', faixaValor: '', tempoNegativado: '', tipoCredor: '', consentimento: false },
+  dividas: [],
+  chat: [],
+  msgsUsuario: 0,
+  leadEnviado: false
+};
+
+/* ===================== PERSISTENCIA ===================== */
+function salvar() {
+  try { localStorage.setItem(CONFIG.chaveStorage, JSON.stringify(state)); } catch (e) {}
+}
+function carregar() {
+  try {
+    const bruto = localStorage.getItem(CONFIG.chaveStorage);
+    if (bruto) state = Object.assign(state, JSON.parse(bruto));
+  } catch (e) {}
+}
+
+/* ===================== UTIL ===================== */
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function formatarReal(v) {
+  const n = Number(v) || 0;
+  return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+function primeiroNome() {
+  return (state.perfil.nome || '').trim().split(' ')[0] || '';
+}
+function pareceDocumento(texto) {
+  return /(?:\d[\s.\-]?){11,}/.test(String(texto || ''));
+}
+function mostrarErro(id, mostrar) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('show', !!mostrar);
+}
+
+/* ===================== TEMA ===================== */
+(function () {
+  const btn = document.querySelector('[data-theme-toggle]');
+  const raiz = document.documentElement;
+  let atual = 'dark';
+  raiz.setAttribute('data-theme', atual);
+  if (btn) btn.addEventListener('click', () => {
+    atual = atual === 'dark' ? 'light' : 'dark';
+    raiz.setAttribute('data-theme', atual);
+    btn.innerHTML = atual === 'dark'
+      ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+      : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>';
+  });
+})();
+
+/* ===================== NAVEGACAO ===================== */
+const telas = ['landing', 'onboarding', 'chat', 'dashboard', 'success', 'trilha'];
+const navMap = { landing: 'nav-home', chat: 'nav-chat', dashboard: 'nav-dashboard', trilha: 'nav-trilha' };
+
+function showScreen(nome) {
+  if (nome === 'chat' && !state.perfil.consentimento) { irParaOnboarding(); return; }
+  telas.forEach(t => {
+    const el = document.getElementById('screen-' + t);
+    if (el) el.classList.toggle('active', t === nome);
+  });
+  Object.entries(navMap).forEach(([t, id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', t === nome);
+  });
+  if (nome === 'chat') iniciarChat();
+  if (nome === 'dashboard') renderPainel();
+  window.scrollTo(0, 0);
+}
+
+function irParaOnboarding() {
+  if (state.perfil.consentimento) { showScreen('chat'); return; }
+  showScreen('onboarding');
+  irPasso(1);
+}
+
+/* ===================== ONBOARDING ===================== */
+function irPasso(n) {
+  [1, 2, 3].forEach(i => {
+    document.getElementById('step-' + i).classList.toggle('active', i === n);
+    const ponto = document.getElementById('dot-' + i);
+    ponto.classList.toggle('active', i === n);
+    ponto.classList.toggle('done', i < n);
+  });
+  if (n === 3) montarResumo();
+}
+
+function validarPasso1() {
+  const nome = document.getElementById('inp-name').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+  const fone = document.getElementById('inp-phone').value.replace(/\D/g, '');
+  const nomeOk = nome.length >= 2;
+  const emailOk = /^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email);
+  const foneOk = fone.length >= 10 && fone.length <= 11;
+
+  mostrarErro('err-name', !nomeOk);
+  mostrarErro('err-email', !emailOk);
+  mostrarErro('err-phone', !foneOk);
+  document.getElementById('inp-name').classList.toggle('invalid', !nomeOk);
+  document.getElementById('inp-email').classList.toggle('invalid', !emailOk);
+  document.getElementById('inp-phone').classList.toggle('invalid', !foneOk);
+  if (!nomeOk || !emailOk || !foneOk) return;
+
+  state.perfil.nome = nome;
+  state.perfil.email = email;
+  state.perfil.whatsapp = fone;
+  salvar();
+  irPasso(2);
+}
+
+function validarPasso2() {
+  const q = document.getElementById('inp-debts').value;
+  const v = document.getElementById('inp-value').value;
+  const t = document.getElementById('inp-time').value;
+  const c = document.getElementById('inp-credor').value;
+  if (!q || !v || !t || !c) { mostrarErro('err-step2', true); return; }
+  mostrarErro('err-step2', false);
+  state.perfil.qtdDividas = q;
+  state.perfil.faixaValor = v;
+  state.perfil.tempoNegativado = t;
+  state.perfil.tipoCredor = c;
+  salvar();
+  irPasso(3);
+}
+
+function montarResumo() {
+  const p = state.perfil;
+  const linhas = [
+    ['Nome', p.nome],
+    ['E-mail', p.email],
+    ['WhatsApp', p.whatsapp],
+    ['Dívidas', p.qtdDividas],
+    ['Valor total', p.faixaValor],
+    ['Tempo negativado', p.tempoNegativado],
+    ['Credor principal', p.tipoCredor]
+  ];
+  document.getElementById('resumo-box').innerHTML = linhas
+    .map(l => '<div class="resumo-linha"><span>' + esc(l[0]) + '</span><span>' + esc(l[1]) + '</span></div>')
+    .join('');
+}
+
+function atualizarConsent() {
+  const marcado = document.getElementById('inp-consent').checked;
+  document.getElementById('btn-finalizar').disabled = !marcado;
+}
+
+async function finalizarOnboarding() {
+  if (!document.getElementById('inp-consent').checked) return;
+  state.perfil.consentimento = true;
+  salvar();
+  enviarLead();
+  showScreen('chat');
+}
+
+function enviarLead() {
+  if (state.leadEnviado) return;
+  state.leadEnviado = true;
+  salvar();
+  const p = state.perfil;
+  fetch('/api/lead', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      nome: p.nome, email: p.email, whatsapp: p.whatsapp, consentimento: true,
+      perfil: {
+        qtdDividas: p.qtdDividas, faixaValor: p.faixaValor,
+        tempoNegativado: p.tempoNegativado, tipoCredor: p.tipoCredor
+      }
+    })
+  }).catch(() => {});
+}
+
+/* ===================== CHAT ===================== */
+function perfilParaApi() {
+  const p = state.perfil;
+  return {
+    primeiroNome: primeiroNome(),
+    qtdDividas: p.qtdDividas,
+    faixaValor: p.faixaValor,
+    tempoNegativado: p.tempoNegativado,
+    tipoCredor: p.tipoCredor,
+    dividasAnotadas: state.dividas.map(d => ({
+      credor: d.credor, valor: d.valor, vencimento: d.venc, faixa: faixaPorVencimento(d.venc).rotulo
+    }))
+  };
+}
+
+function iniciarChat() {
+  const caixa = document.getElementById('chat-msgs');
+  if (caixa.dataset.pronto === '1') return;
+  caixa.dataset.pronto = '1';
+  caixa.innerHTML = '';
+
+  if (state.chat.length === 0) {
+    state.chat.push({
+      role: 'user',
+      oculta: true,
+      content: 'Cheguei agora pelo app. Se apresente em duas ou três linhas, comente o que chama atenção no meu perfil e faça a primeira pergunta.'
+    });
+    salvar();
+    responderComIA();
+  } else {
+    state.chat.filter(m => !m.oculta).forEach(m => desenharMensagem(m.role, m.content));
+    sugestoesRapidas();
+  }
+}
+
+function desenharMensagem(papel, texto) {
+  const caixa = document.getElementById('chat-msgs');
+  const el = document.createElement('div');
+  el.className = 'msg ' + (papel === 'assistant' ? 'ai' : 'user');
+  const corpo = esc(texto)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+  el.innerHTML = (papel === 'assistant' ? '<div class="msg-avatar">M</div>' : '') +
+    '<div class="msg-bubble">' + corpo + '</div>';
+  caixa.appendChild(el);
+  caixa.scrollTop = caixa.scrollHeight;
+}
+
+function mostrarDigitando(ligado) {
+  const caixa = document.getElementById('chat-msgs');
+  const antigo = document.getElementById('typing-el');
+  if (antigo) antigo.remove();
+  if (!ligado) return;
+  const el = document.createElement('div');
+  el.id = 'typing-el';
+  el.className = 'msg ai';
+  el.innerHTML = '<div class="msg-avatar">M</div><div class="msg-bubble typing"><span></span><span></span><span></span></div>';
+  caixa.appendChild(el);
+  caixa.scrollTop = caixa.scrollHeight;
+}
+
+function alerta(texto) {
+  const el = document.getElementById('chat-alert');
+  el.innerHTML = texto;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 9000);
+}
+
+function sugestoesRapidas() {
+  const sugestoes = state.chat.length <= 2
+    ? ['Por onde eu começo?', 'Dívida antiga rende mais desconto?', 'Como sei se o acordo é golpe?']
+    : ['E se eu não puder pagar à vista?', 'Como confirmo se ainda estou negativado?', 'Quero anotar uma dívida'];
+  const caixa = document.getElementById('quick-btns');
+  caixa.innerHTML = '';
+  sugestoes.forEach(s => {
+    const b = document.createElement('button');
+    b.className = 'quick-btn';
+    b.textContent = s;
+    b.onclick = () => enviarMensagem(s);
+    caixa.appendChild(b);
+  });
+}
+
+async function chamarApiChat() {
+  const controle = new AbortController();
+  const tempo = setTimeout(() => controle.abort(), CONFIG.timeoutMs);
+  try {
+    const r = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        messages: state.chat.slice(-12).map(m => ({ role: m.role, content: m.content })),
+        perfil: perfilParaApi()
+      }),
+      signal: controle.signal
+    });
+    clearTimeout(tempo);
+    if (!r.ok) return null;
+    const dados = await r.json();
+    return dados && dados.texto ? dados.texto : null;
+  } catch (e) {
+    clearTimeout(tempo);
+    return null;
+  }
+}
+
+async function responderComIA() {
+  document.getElementById('quick-btns').innerHTML = '';
+  document.getElementById('send-btn').disabled = true;
+  mostrarDigitando(true);
+  const texto = await chamarApiChat();
+  mostrarDigitando(false);
+  document.getElementById('send-btn').disabled = false;
+
+  if (!texto) {
+    desenharMensagem('assistant', 'Tive um problema pra responder agora. Tenta de novo em instantes ou fala comigo no WhatsApp.');
+    const caixa = document.getElementById('chat-msgs');
+    const acao = document.createElement('div');
+    acao.className = 'chat-erro-acao';
+    acao.innerHTML = '<a class="btn-wpp" href="' + linkWhatsApp('Oi! Estava usando o Limpa Nome I.A e o chat deu erro. Pode me ajudar?') + '" target="_blank" rel="noopener">Falar no WhatsApp</a>';
+    caixa.appendChild(acao);
+    caixa.scrollTop = caixa.scrollHeight;
+    return;
+  }
+  state.chat.push({ role: 'assistant', content: texto });
+  salvar();
+  desenharMensagem('assistant', texto);
+  sugestoesRapidas();
+}
+
+function enviarMensagem(texto) {
+  const limpo = String(texto || '').trim();
+  if (!limpo) return;
+
+  if (pareceDocumento(limpo)) {
+    alerta('Não preciso do seu CPF. Pode apagar esse número, aqui a gente trabalha sem ele.');
+    return;
+  }
+  if (state.msgsUsuario >= CONFIG.limiteMensagens) {
+    alerta('Chegamos ao limite desta conversa. Continue comigo no WhatsApp: <a href="' + linkWhatsApp('Oi! Vim do Limpa Nome I.A e quero continuar minha análise.') + '" target="_blank" rel="noopener">abrir conversa</a>');
+    return;
+  }
+
+  state.msgsUsuario++;
+  state.chat.push({ role: 'user', content: limpo });
+  salvar();
+  desenharMensagem('user', limpo);
+  document.getElementById('quick-btns').innerHTML = '';
+
+  if (/anotar uma d/i.test(limpo)) { showScreen('dashboard'); abrirModal(); return; }
+  responderComIA();
+}
+
+function enviarDoInput() {
+  const campo = document.getElementById('chat-input');
+  const texto = campo.value.trim();
+  if (!texto) return;
+  campo.value = '';
+  enviarMensagem(texto);
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); enviarDoInput(); }
+}
+
+/* ===================== FAIXA DE NEGOCIACAO ===================== */
+function mesesDesde(venc) {
+  if (!venc) return null;
+  const partes = String(venc).split('-');
+  const ano = parseInt(partes[0], 10);
+  const mes = parseInt(partes[1], 10);
+  if (!ano || !mes) return null;
+  const hoje = new Date();
+  return (hoje.getFullYear() - ano) * 12 + (hoje.getMonth() + 1 - mes);
+}
+
+function faixaPorVencimento(venc) {
+  const m = mesesDesde(venc);
+  if (m === null) {
+    return { rotulo: 'Sem data', classe: 'low', dica: 'Informe o mês do vencimento pra eu calcular a faixa e a ordem de negociação.' };
+  }
+  if (m > 60) {
+    return {
+      rotulo: 'Fora do prazo de negativação', classe: 'high',
+      dica: 'Passou de 5 anos do vencimento. Pelo CDC art. 43, o registro não pode mais constar no cadastro. <b>Confira seu nome no birô e peça a exclusão se ainda aparecer.</b> A dívida continua existindo e pode ser cobrada, só não pode te manter negativado.'
+    };
+  }
+  if (m >= 24) {
+    return {
+      rotulo: 'Faixa alta de desconto', classe: 'high',
+      dica: 'Dívida com mais de 2 anos costuma abrir a maior margem de acordo, porque o credor já contabilizou a perda. <b>Bom alvo pra feirão de negociação.</b> Peça condição à vista antes de falar em parcela.'
+    };
+  }
+  if (m >= 12) {
+    return {
+      rotulo: 'Faixa média', classe: 'medium',
+      dica: 'Negocie direto no canal oficial do credor. <b>Não aceite a primeira oferta</b> e pergunte qual a melhor condição à vista de hoje.'
+    };
+  }
+  return {
+    rotulo: 'Faixa baixa', classe: 'low',
+    dica: 'Dívida recente costuma abrir pouco desconto. Se o orçamento aperta, <b>priorize as mais antigas</b> e volte nesta depois.'
+  };
+}
+
+function textoTempo(m) {
+  if (m === null) return 'sem data';
+  if (m < 1) return 'menos de 1 mês';
+  if (m < 12) return m + (m === 1 ? ' mês' : ' meses');
+  const anos = Math.floor(m / 12);
+  const resto = m % 12;
+  return anos + (anos === 1 ? ' ano' : ' anos') + (resto ? ' e ' + resto + (resto === 1 ? ' mês' : ' meses') : '');
+}
+
+/* ===================== PAINEL ===================== */
+function renderPainel() {
+  const nome = primeiroNome();
+  document.getElementById('dash-name').textContent = nome ? ('Painel do ' + nome) : 'Seu painel';
+
+  const lista = document.getElementById('debts-list');
+  if (state.dividas.length === 0) {
+    lista.innerHTML = '<div class="empty-state"><h4>Seu mapa começa vazio, e é assim mesmo</h4>' +
+      '<p>Anote a primeira dívida que você lembra, mesmo sem saber o valor exato. Dá pra ajustar depois.</p></div>';
+  } else {
+    lista.innerHTML = state.dividas.map((d, i) => {
+      const f = faixaPorVencimento(d.venc);
+      const m = mesesDesde(d.venc);
+      return '<div class="debt-card">' +
+        '<div class="debt-top">' +
+          '<div class="debt-info">' +
+            '<div class="debt-name">' + esc(d.credor) + '</div>' +
+            '<div class="debt-meta">' + esc(d.biro) + ' · vencida há ' + textoTempo(m) + '</div>' +
+          '</div>' +
+          '<span class="debt-chance ' + f.classe + '">' + f.rotulo + '</span>' +
+          '<div class="debt-value">' + formatarReal(d.valor) + '</div>' +
+        '</div>' +
+        '<div class="debt-tip">' + f.dica + '</div>' +
+        '<div class="debt-acoes">' +
+          '<button class="btn-negotiate" onclick="perguntarSobre(' + i + ')">Perguntar ao Matheus</button>' +
+          '<button class="btn-remove" onclick="removerDivida(' + i + ')">Remover</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  const total = state.dividas.length;
+  const soma = state.dividas.reduce((acc, d) => acc + (Number(d.valor) || 0), 0);
+  const prioridade = state.dividas.filter(d => faixaPorVencimento(d.venc).classe === 'high').length;
+  const idades = state.dividas.map(d => mesesDesde(d.venc)).filter(m => m !== null);
+  const maisAntiga = idades.length ? Math.max.apply(null, idades) : null;
+
+  document.getElementById('kpi-total').textContent = total;
+  document.getElementById('kpi-total-sub').textContent = total ? 'Anotadas por você' : 'Comece pela que você lembra';
+  document.getElementById('kpi-valor').textContent = formatarReal(soma);
+  document.getElementById('kpi-prio').textContent = prioridade;
+  document.getElementById('kpi-antiga').textContent = maisAntiga === null ? 'Nenhuma' : textoTempo(maisAntiga);
+}
+
+function perguntarSobre(i) {
+  const d = state.dividas[i];
+  if (!d) return;
+  showScreen('chat');
+  setTimeout(() => {
+    enviarMensagem('Quero falar da dívida com ' + d.credor + ', de ' + formatarReal(d.valor) + ', vencida em ' + (d.venc || 'data que não lembro') + '. O que eu faço?');
+  }, 250);
+}
+
+function removerDivida(i) {
+  if (!confirm('Remover essa dívida do seu mapa?')) return;
+  state.dividas.splice(i, 1);
+  salvar();
+  renderPainel();
+}
+
+/* ===================== MODAL ===================== */
+function abrirModal() { document.getElementById('modal-debt').classList.add('open'); }
+function fecharModal() {
+  document.getElementById('modal-debt').classList.remove('open');
+  mostrarErro('err-modal', false);
+}
+
+function salvarDivida() {
+  const credor = document.getElementById('modal-company').value.trim();
+  const valor = parseFloat(document.getElementById('modal-amount').value);
+  const venc = document.getElementById('modal-venc').value;
+  const biro = document.getElementById('modal-bureau').value;
+
+  if (!credor || !(valor >= 0) || !venc) { mostrarErro('err-modal', true); return; }
+  mostrarErro('err-modal', false);
+
+  state.dividas.push({ credor: credor.slice(0, 60), valor: valor, venc: venc, biro: biro });
+  salvar();
+  document.getElementById('modal-company').value = '';
+  document.getElementById('modal-amount').value = '';
+  document.getElementById('modal-venc').value = '';
+  fecharModal();
+  renderPainel();
+}
+
+/* ===================== WHATSAPP E CONQUISTA ===================== */
+function linkWhatsApp(texto) {
+  return 'https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(texto);
+}
+function abrirWhatsApp() {
+  const nome = primeiroNome();
+  const msg = 'Oi! Aqui é ' + (nome || 'um usuário do app') + ', vim do Limpa Nome I.A e quero continuar minha análise.';
+  window.open(linkWhatsApp(msg), '_blank', 'noopener');
+}
+function textoConquista() {
+  return 'Negociei minha dívida e organizei minha vida financeira com ajuda do Limpa Nome I.A.';
+}
+function compartilharConquista() {
+  const t = textoConquista();
+  if (navigator.share) { navigator.share({ text: t }).catch(() => {}); return; }
+  window.open('https://wa.me/?text=' + encodeURIComponent(t), '_blank', 'noopener');
+}
+function copiarConquista() {
+  const t = textoConquista();
+  if (navigator.clipboard) navigator.clipboard.writeText(t).catch(() => {});
+}
+
+/* ===================== LGPD: APAGAR TUDO ===================== */
+function apagarMeusDados() {
+  if (!confirm('Isso apaga seu perfil, suas dívidas anotadas e a conversa deste aparelho. Confirma?')) return;
+  try { localStorage.removeItem(CONFIG.chaveStorage); } catch (e) {}
+  state = {
+    perfil: { nome: '', email: '', whatsapp: '', qtdDividas: '', faixaValor: '', tempoNegativado: '', tipoCredor: '', consentimento: false },
+    dividas: [], chat: [], msgsUsuario: 0, leadEnviado: false
+  };
+  const caixa = document.getElementById('chat-msgs');
+  caixa.innerHTML = '';
+  caixa.dataset.pronto = '';
+  ['inp-name', 'inp-email', 'inp-phone'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  ['inp-debts', 'inp-value', 'inp-time', 'inp-credor'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const chk = document.getElementById('inp-consent');
+  if (chk) { chk.checked = false; atualizarConsent(); }
+  showScreen('landing');
+}
+
+/* ===================== BOOT ===================== */
+carregar();
+document.addEventListener('DOMContentLoaded', () => {
+  if (state.perfil.nome) {
+    ['inp-name', 'inp-email', 'inp-phone'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      if (el) el.value = [state.perfil.nome, state.perfil.email, state.perfil.whatsapp][i] || '';
+    });
+  }
+  renderPainel();
+});
+
+</script>
+</body>
+</html>
